@@ -1,0 +1,5 @@
+.DS_Store
+*.swp
+api-key.json
+parts/
+venv
