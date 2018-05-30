@@ -6,7 +6,7 @@ with open("api-key.json") as f:
     GOOGLE_CLOUD_SPEECH_CREDENTIALS = f.read()
 
 r = sr.Recognizer()
-files = os.listdir('parts/')
+files = sorted(os.listdir('parts/'))
 
 all_text = []
 
