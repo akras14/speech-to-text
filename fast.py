@@ -9,28 +9,31 @@ from os.path import isfile, join
 from multiprocessing.dummy import Pool
 
 def do_work(input_file):
-
     pool = Pool(8)  # Number of concurrent threads
     index = input_file.rfind('/')
     file_name = input_file[index+1:len(input_file)]
     print("\nTRANSCRIPTION STARTING FOR {0}.".format(file_name.upper()))
-
     # convert input file from .mp3 to .wav
     # can't do this with ffmpeg because it compresses it in a way that's not supported by wave.py
     # need to use audacity to convert to wav instead
 
     #region split .wav file into parts
     file_path = input_file
+    sourcestring = "\"" + file_path + "\""
+    copystring = "\"source/parts/" + file_name[:-3] + "%09d.wav\""
     print("Splitting {0} into parts.".format(file_name))
     cmd_in = "ffmpeg -loglevel quiet -i {0} -f segment -segment_time 30 " \
-             "-c copy source/parts/{1}%09d.wav".format(file_path, file_name[:-3])
+             "-c copy source/parts/{1}%09d.wav".format("\"" + file_path + "\"", "\"" + file_name[:-3] + "\"")
+
+    #
     args = shlex.split(cmd_in)
     p = subprocess.Popen(args)
     p.wait() #necessary in order to avoid starting subsequent work before splitting finishes
     #endregion
 
     #open api key to google cloud
-    with open("api-key.json") as f:
+
+    with open("/Users/kfong25/Documents/05Projects/Code/Python/api-key.json") as f: #put full path to api-key.json here
         GOOGLE_CLOUD_SPEECH_CREDENTIALS = f.read()
 
     #find only the relevant files
@@ -43,6 +46,8 @@ def do_work(input_file):
         if elem.startswith(file_name[:-4]) and file_name[:-4] in elem:
             files.append(elem)
     print("Split file with ffmpeg into {0} parts.".format(len(files)))
+    if len(files) == 0:
+        raise("No parts to split")
     #endregion
 
     #region transcribe file parts
@@ -127,6 +132,9 @@ if __name__ == '__main__':
         onlyfiles = []
         for f in os.listdir(args.path):
             if isfile(join(args.path, f)) and ".wav" in f:
-                onlyfiles.append(os.path.abspath(os.path.join(args.path,f)))
+                if "Processed" in f:
+                    pass
+                else:
+                    onlyfiles.append(os.path.abspath(os.path.join(args.path,f)))
         for f in onlyfiles:
             do_work(f)

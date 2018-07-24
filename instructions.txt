@@ -31,12 +31,18 @@ HOW TO USE
     Click “Save other”
     Click “Export as Wav”
     Export it with default setting
+
 2. Move .wav file to the speech-to-text/source directory.
+
 3. Steps 1 and 2 can be repeated for multiple .mp3 files.  (Or use chains to process multiple files at once: https://manual.audacityteam.org/man/chains_for_batch_processing_and_effects_automation.html)
+
 4. Open Terminal.
+
 5. In Terminal, navigate to the speech-to-text directory.  Example:
     cd "/Users/kfong25/Documents/05Projects/Code/Python/speech-to-text"
+
 6a. Run the fast.py script against the source directory.  Example:
     python3 fast.py "/Users/kfong25/Documents/05Projects/Code/Python/speech-to-text/source"
+
 6b. OR run the fast.py script against a .wav file in the source directory.  Example:
-    python3 fast.py "/Users/kfong25/Documents/05Projects/Code/Python/speech-to-text/source/winston-churchill-the-threat-of-germany.wav"
+    python3 fast.py "/Users/kfong25/Documents/05Projects/Code/Python/speech-to-text/source/winston_churchill.wav"
